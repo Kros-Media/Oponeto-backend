@@ -1,6 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const compression = require('compression');
+const ć = require('compression');
 const helmet = require('helmet');
 
 const app = express();
