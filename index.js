@@ -2,8 +2,8 @@ const express = require('express');
 const cors = require('cors');
 const session = require('express-session');
 const passport = require('passport');
-const mongoose = require('mongoose'); // Dodaj ten import
-const MongoStore = require('connect-mongo'); 
+const mongoose = require('mongoose');
+const MongoStore = require('connect-mongo');  // Dodaj ten import
 
 const { connectToDatabase, getUsersCollection } = require('./modules/db');
 const articleController = require('./modules/articleControler');
@@ -25,8 +25,14 @@ app.use(
     secret: process.env.SESSION_SECRET || 'your-secret-key',
     resave: false,
     saveUninitialized: false,
-    store: new MongoStore({ url: 'mongodb+srv://Mateusz:Aneczka96@cluster0.xflo1s4.mongodb.net/?retryWrites=true&w=majority', useNewUrlParser: true, useUnifiedTopology: true }),
-    // ^ Zamień to na swoje dane połączenia z MongoDB Atlas
+    store: MongoStore.create({
+      mongoUrl: 'mongodb+srv://Mateusz:Aneczka96@cluster0.xflo1s4.mongodb.net/?retryWrites=true&w=majority',
+      ttl: 14 * 24 * 60 * 60, // 14 dni ważności sesji, można dostosować
+      autoRemove: 'interval',
+      autoRemoveInterval: 10, // Opcjonalnie, czas w minutach, w którym stare sesje są usuwane
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    }),
   })
 );
 initializePassport();
