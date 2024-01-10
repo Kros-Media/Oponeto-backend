@@ -3,9 +3,9 @@ const express = require('express');
 const cors = require('cors');
 const session = require('express-session');
 const passport = require('passport');
-const { connectToDatabase, getUsersCollection, client } = require('./modules/db');
-const articleController = require('./modules/articleControler');
-const { initializePassport } = require('./modules/auth');
+const { connectToDatabase, getUsersCollection, client } = require('../modules/db');
+const articleController = require('../modules/articleControler');
+const { initializePassport } = require('../modules/auth');
 
 const app = express();
 const port = process.env.PORT || 3006;
