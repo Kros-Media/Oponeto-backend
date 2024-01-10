@@ -2,8 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const session = require('express-session');
 const passport = require('passport');
-const mongoose = require('mongoose'); // Dodaj ten import
-const MongoStore = require('connect-mongo'); 
+const MongoStore = require('connect-mongo').default;
 
 const { connectToDatabase, getUsersCollection } = require('./modules/db');
 const articleController = require('./modules/articleControler');
@@ -25,13 +24,13 @@ app.use(
     secret: process.env.SESSION_SECRET || 'your-secret-key',
     resave: false,
     saveUninitialized: false,
-    store: MongoStore.create({
+    store: new MongoStore({
       mongoUrl: 'mongodb+srv://Mateusz:Aneczka96@cluster0.xflo1s4.mongodb.net/?retryWrites=true&w=majority',
-      useNewUrlParser: true,
-      useUnifiedTopology: true
-    })
-    ,
-    // ^ Zamień to na swoje dane połączenia z MongoDB Atlas
+      mongoOptions: {
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
+      },
+    }),
   })
 );
 initializePassport();
