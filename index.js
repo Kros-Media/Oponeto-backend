@@ -26,13 +26,16 @@ app.use(
     resave: false,
     saveUninitialized: false,
     store: new MongoStore({
-      mongooseConnection: mongoose.connection, // Dodaj to
+      mongoUrl: 'mongodb+srv://Mateusz:Aneczka96@cluster0.xflo1s4.mongodb.net/?retryWrites=true&w=majority',
       ttl: 14 * 24 * 60 * 60,
       autoRemove: 'interval',
       autoRemoveInterval: 10,
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
     }),
   })
 );
+
 initializePassport();
 
 app.use(passport.initialize());
