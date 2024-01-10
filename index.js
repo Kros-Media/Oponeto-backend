@@ -24,7 +24,7 @@ app.use(
     secret: process.env.SESSION_SECRET || 'your-secret-key',
     resave: false,
     saveUninitialized: false,
-    store: new MongoStore({
+    store: createMongoStore({
       mongoUrl: 'mongodb+srv://Mateusz:Aneczka96@cluster0.xflo1s4.mongodb.net/?retryWrites=true&w=majority',
       mongoOptions: {
         useNewUrlParser: true,
