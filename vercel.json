@@ -1,21 +1,21 @@
 {
-    "functions": {
-      "api/**/*.js": {
-        "runtime": "nodejs14.x",
-        "maxDuration": 10,
-        "memory": 512
-      }
-    },
-    "routes": [
-      { "handle": "filesystem" },
-      {
-        "src": "/index.js"
-        
+    "build": {
+      "functions": {
+        "api/**/*.js": {
+          "runtime": "nodejs14.x"
+        }
       },
-      {
-        "src": "/(.*)",
-        "dest": "/api/$1"
-      }
-    ]
+      "routes": [
+        { "handle": "filesystem" },
+        {
+          "src": "/index.js",
+          "dest": "/api/index.js"
+        },
+        {
+          "src": "/(.*)",
+          "dest": "/api/$1"
+        }
+      ]
+    }
   }
   
