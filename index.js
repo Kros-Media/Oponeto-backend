@@ -1,10 +1,9 @@
+const { create: createMongoStore } = require('connect-mongo');
 const express = require('express');
 const cors = require('cors');
-// const session = require('express-session');
+const session = require('express-session');
 const passport = require('passport');
-// const MongoStore = require('connect-mongo').default;
-
-const { connectToDatabase, getUsersCollection } = require('./modules/db');
+const { connectToDatabase, getUsersCollection, client } = require('./modules/db');
 const articleController = require('./modules/articleControler');
 const { initializePassport } = require('./modules/auth');
 
@@ -19,7 +18,19 @@ const corsOptions = {
 app.use(cors(corsOptions));
 app.use(express.json());
 
-
+app.use(
+  session({
+    secret: process.env.SESSION_SECRET || 'your-secret-key',
+    resave: false,
+    saveUninitialized: false,
+    store: createMongoStore({
+      client: client,
+      dbName: 'your-database-name',
+      collectionName: 'sessions',
+      ttl: 60 * 60 * 24, // 1 day in seconds
+    }),
+  })
+);
 initializePassport();
 
 app.use(passport.initialize());

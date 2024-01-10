@@ -27,4 +27,4 @@ async function getUsersCollection() {
   return db.collection('users');
 }
 
-module.exports = { connectToDatabase, getCollection, getUsersCollection, dbName, dbUsersName };
+module.exports = { connectToDatabase, getCollection, getUsersCollection, dbName, dbUsersName, client };
