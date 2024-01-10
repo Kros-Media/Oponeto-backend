@@ -3,7 +3,7 @@ const cors = require('cors');
 const session = require('express-session');
 const passport = require('passport');
 const mongoose = require('mongoose');
-const MongoStore = require('connect-mongo')(session);  // Użyj connect-mongo jako funkcji i przekaż do niej express-session
+const MongoStore = require('connect-mongo')(session);
 
 const { connectToDatabase, getUsersCollection } = require('./modules/db');
 const articleController = require('./modules/articleController');
@@ -26,7 +26,7 @@ app.use(
     resave: false,
     saveUninitialized: false,
     store: new MongoStore({
-      mongoUrl: 'mongodb+srv://Mateusz:Aneczka96@cluster0.xflo1s4.mongodb.net/?retryWrites=true&w=majority',
+      mongooseConnection: mongoose.connection,
       ttl: 14 * 24 * 60 * 60,
       autoRemove: 'interval',
       autoRemoveInterval: 10,
@@ -35,7 +35,6 @@ app.use(
     }),
   })
 );
-
 initializePassport();
 
 app.use(passport.initialize());
