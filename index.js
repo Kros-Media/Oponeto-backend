@@ -2,16 +2,18 @@ const express = require('express');
 const cors = require('cors');
 const session = require('express-session');
 const passport = require('passport');
+const mongoose = require('mongoose'); // Dodaj ten import
+
 const { connectToDatabase, getUsersCollection } = require('./modules/db');
 const articleController = require('./modules/articleControler');
 const { initializePassport } = require('./modules/auth');
 
 const app = express();
-const port = process.env.PORT || 3006
+const port = process.env.PORT || 3006;
 
 const corsOptions = {
   origin: 'http://localhost:3000',
-  credentials: true, // Dodaj tę linijkę
+  credentials: true,
 };
 
 app.use(cors(corsOptions));
@@ -24,7 +26,6 @@ app.use(
     saveUninitialized: false,
   })
 );
-
 
 initializePassport();
 
@@ -50,6 +51,7 @@ app.get('/getUserByGoogleId/:googleId', async (req, res) => {
     res.status(500).json({ message: 'Internal Server Error' });
   }
 });
+
 app.get('/auth/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
 
 app.get(
