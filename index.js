@@ -1,31 +1,108 @@
 const express = require('express');
-const bodyParser = require('body-parser');
+const cors = require('cors');
+const session = require('express-session');
+const passport = require('passport');
+const mongoose = require('mongoose'); // Dodaj ten import
+const MongoStore = require('connect-mongo'); 
 
-
+const { connectToDatabase, getUsersCollection } = require('./modules/db');
+const articleController = require('./modules/articleControler');
+const { initializePassport } = require('./modules/auth');
 
 const app = express();
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 3006;
 
-// Middleware
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+const corsOptions = {
+  origin: 'http://localhost:3000',
+  credentials: true,
+};
 
+app.use(cors(corsOptions));
+app.use(express.json());
 
+app.use(
+  session({
+    secret: process.env.SESSION_SECRET || 'your-secret-key',
+    resave: false,
+    saveUninitialized: false,
+    store: new MongoStore({ url: 'mongodb+srv://Mateusz:Aneczka96@cluster0.xflo1s4.mongodb.net/?retryWrites=true&w=majority', useNewUrlParser: true, useUnifiedTopology: true }),
+    // ^ Zamień to na swoje dane połączenia z MongoDB Atlas
+  })
+);
+initializePassport();
 
-// Routing
-app.get('/', (req, res) => {
-  res.send('Witaj na Zoptymalizowanym Backendzie Express.js v2.0.0!');
+app.use(passport.initialize());
+app.use(passport.session());
+
+app.use('/', articleController);
+
+app.get('/getUserByGoogleId/:googleId', async (req, res) => {
+  const googleId = req.params.googleId;
+
+  try {
+    const usersCollection = await getUsersCollection();
+    const user = await usersCollection.findOne({ googleId });
+
+    if (user) {
+      res.status(200).json(user);
+    } else {
+      res.status(404).json({ message: 'User not found' });
+    }
+  } catch (error) {
+    console.error('Error fetching user by Google ID:', error);
+    res.status(500).json({ message: 'Internal Server Error' });
+  }
 });
 
-// Dodaj inne ścieżki i routy według potrzeb
+app.get('/auth/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
 
-// Obsługa błędów
-app.use((err, req, res, next) => {
-  console.error(err.stack);
-  res.status(500).send('Coś poszło nie tak!');
+app.get(
+  '/auth/google/callback',
+  passport.authenticate('google', { failureRedirect: '/' }),
+  (req, res) => {
+    const googleId = req.user && req.user.googleId;
+    if (googleId) {
+      res.cookie('googleId', googleId);
+    }
+    res.redirect('http://localhost:3000');
+  }
+);
+
+app.get('/logout', (req, res) => {
+  req.logout();
+  res.clearCookie('googleId');
+  res.redirect('/');
 });
 
-// Start serwera
-app.listen(port, () => {
-  console.log(`Serwer działa na http://localhost:${port}`);
+const checkAuthenticated = (req, res, next) => {
+  if (req.isAuthenticated()) {
+    return next();
+  }
+  res.redirect('/');
+};
+
+app.get('/dashboard', checkAuthenticated, (req, res) => {
+  res.send(`Hello ${req.user.displayName}!`);
 });
+
+app.post(
+  '/auth/register',
+  passport.authenticate('local-register', {
+    successRedirect: '/dashboard',
+    failureRedirect: '/',
+    failureFlash: true,
+  })
+);
+
+async function startServer() {
+  try {
+    await connectToDatabase();
+    app.listen(port, () => {
+      console.log(`Serwer działa na http://localhost:${port}`);
+    });
+  } catch (error) {
+    console.error('Błąd podczas uruchamiania serwera:', error);
+  }
+}
+
+startServer();
