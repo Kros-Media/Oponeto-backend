@@ -3,6 +3,7 @@ const cors = require('cors');
 const session = require('express-session');
 const passport = require('passport');
 const mongoose = require('mongoose'); // Dodaj ten import
+const MongoStore = require('connect-mongo'); 
 
 const { connectToDatabase, getUsersCollection } = require('./modules/db');
 const articleController = require('./modules/articleControler');
