@@ -19,20 +19,7 @@ const corsOptions = {
 app.use(cors(corsOptions));
 app.use(express.json());
 
-app.use(
-  session({
-    secret: process.env.SESSION_SECRET || 'your-secret-key',
-    resave: false,
-    saveUninitialized: false,
-    store: createMongoStore({
-      mongoUrl: 'mongodb+srv://Mateusz:Aneczka96@cluster0.xflo1s4.mongodb.net/?retryWrites=true&w=majority',
-      mongoOptions: {
-        useNewUrlParser: true,
-        useUnifiedTopology: true,
-      },
-    }),
-  })
-);
+
 initializePassport();
 
 app.use(passport.initialize());
