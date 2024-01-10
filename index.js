@@ -1,7 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const compression = require('compression');
-const helmet = require('helmet');
+
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -9,8 +9,8 @@ const port = process.env.PORT || 3000;
 // Middleware
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(compression());
-app.use(helmet());
+
+
 
 // Routing
 app.get('/', (req, res) => {
