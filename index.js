@@ -1,8 +1,8 @@
 const express = require('express');
 const cors = require('cors');
-const session = require('express-session');
+// const session = require('express-session');
 const passport = require('passport');
-const MongoStore = require('connect-mongo').default;
+// const MongoStore = require('connect-mongo').default;
 
 const { connectToDatabase, getUsersCollection } = require('./modules/db');
 const articleController = require('./modules/articleControler');
