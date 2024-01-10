@@ -1,14 +1,7 @@
 {
-	"folders": [
-		{
-			"path": "../../../../../../Users/mateusz/Desktop/webDev/react_express"
-		},
-		{
-			"path": "../../Client"
-		},
-		{
-			"path": ".."
-		}
-	],
-	"settings": {}
+    "folders": [
+        {
+            "path": ".."
+        }
+    ]
 }

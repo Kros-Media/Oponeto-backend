@@ -7,7 +7,7 @@ const articleController = require('./modules/articleControler');
 const { initializePassport } = require('./modules/auth');
 
 const app = express();
-const port = 3006;
+const port = process.env.PORT || 3006
 
 const corsOptions = {
   origin: 'http://localhost:3000',
@@ -19,11 +19,12 @@ app.use(express.json());
 
 app.use(
   session({
-    secret: 'your-secret-key',
+    secret: process.env.SESSION_SECRET || 'your-secret-key',
     resave: false,
     saveUninitialized: false,
   })
 );
+
 
 initializePassport();
 
