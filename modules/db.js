@@ -1,6 +1,6 @@
 const { MongoClient } = require('mongodb');
 
-// Zmieniony URL połączenia na ten z MongoDB Atlas
+// Zaktualizowany URL połączenia do MongoDB Atlas
 const url = 'mongodb+srv://Mateusz:Aneczka96@cluster0.xflo1s4.mongodb.net/?retryWrites=true&w=majority';
 
 // Utwórz klient MongoDB
